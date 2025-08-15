@@ -8,8 +8,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'dev-key'
 db.init_app(app)
 
-@app.before_first_request
-def create_tables():
+# Initialize database when the app starts (Flask 3.x compatible)
+with app.app_context():
     init_db(app)
 
 @app.route('/')
