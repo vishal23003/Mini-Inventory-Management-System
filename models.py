@@ -30,6 +30,6 @@ class Transaction(db.Model):
     product = db.relationship('Product', back_populates='transactions')
 
 def init_db(app):
+    """Initialize database tables."""
     with app.app_context():
-        db.init_app(app)
         db.create_all()
