@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">Products</h1>
+
+  <div class="bg-white p-4 rounded shadow mb-4">
+    <h2 class="font-semibold">Add Product</h2>
+    <form action="/products/add" method="post" class="grid grid-cols-2 gap-2 mt-2">
+      <input name="name" placeholder="Name" class="p-2 border"/>
+      <input name="sku" placeholder="SKU" class="p-2 border"/>
+      <input name="price" placeholder="Price" type="number" step="0.01" class="p-2 border"/>
+      <input name="quantity" placeholder="Quantity" type="number" class="p-2 border"/>
+      <input name="reorder_level" placeholder="Reorder level" type="number" class="p-2 border"/>
+      <select name="supplier_id" class="p-2 border">
+        <option value="">-- Supplier (optional) --</option>
+        {% for s in suppliers %}
+          <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}
+      </select>
+      <div></div>
+      <button class="bg-blue-600 text-white p-2 rounded">Add</button>
+    </form>
+  </div>
+
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="font-semibold">All Products</h2>
+    <table class="w-full mt-2">
+      <thead><tr class="text-left"><th>Name</th><th>SKU</th><th>Price</th><th>Qty</th><th>Supplier</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for p in products %}
+          <tr>
+            <td>{{ p.name }}</td>
+            <td>{{ p.sku }}</td>
+            <td>₹ {{ '%.2f' % p.price }}</td>
+            <td>{{ p.quantity }}</td>
+            <td>{{ p.supplier.name if p.supplier else '-' }}</td>
+            <td>
+              <form action="/products/edit/{{ p.id }}" method="post" class="inline-block">
+                <input type="text" name="name" value="{{ p.name }}" class="hidden"/>
+              </form>
+              <form action="/products/delete/{{ p.id }}" method="post" class="inline-block" onsubmit="return confirm('Delete product?')">
+                <button class="text-red-600">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
