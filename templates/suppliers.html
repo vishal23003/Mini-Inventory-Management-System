@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">Suppliers</h1>
+
+  <div class="bg-white p-4 rounded shadow mb-4">
+    <h2 class="font-semibold">Add Supplier</h2>
+    <form action="/suppliers/add" method="post" class="grid grid-cols-2 gap-2 mt-2">
+      <input name="name" placeholder="Name" class="p-2 border"/>
+      <input name="contact" placeholder="Contact" class="p-2 border"/>
+      <div></div>
+      <button class="bg-blue-600 text-white p-2 rounded">Add Supplier</button>
+    </form>
+  </div>
+
+  <div class="bg-white p-4 rounded shadow">
+    <h2 class="font-semibold">Suppliers & Associate</h2>
+    <table class="w-full mt-2">
+      <thead><tr class="text-left"><th>Name</th><th>Contact</th><th>Products</th><th>Associate</th></tr></thead>
+      <tbody>
+        {% for s in suppliers %}
+          <tr>
+            <td>{{ s.name }}</td>
+            <td>{{ s.contact or '-' }}</td>
+            <td>
+              {% if s.products %}
+                <ul>
+                  {% for p in s.products %}
+                    <li>{{ p.name }} ({{ p.quantity }})</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                -
+              {% endif %}
+            </td>
+            <td>
+              <form action="/suppliers/associate" method="post">
+                <input type="hidden" name="supplier_id" value="{{ s.id }}"/>
+                <select name="product_id" class="p-2 border">
+                  {% for p in products %}
+                    <option value="{{ p.id }}">{{ p.name }}</option>
+                  {% endfor %}
+                </select>
+                <button class="ml-2 bg-green-600 text-white p-1 rounded">Associate</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
